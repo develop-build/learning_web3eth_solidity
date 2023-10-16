@@ -23,6 +23,23 @@ beforeEach(async () => {
 
 describe('Inbox', () => {
   it('Deploys a new contract', () => {
-    console.log(inbox);
+    // console.log(inbox); //If logs, means successfully deployed
+    assert.ok(inbox.options.address);
+  });
+
+  it('has a default message', async () => {
+    const message = await inbox.methods.message().call();
+    assert.equal(message, 'Hi Deepak!');
+  });
+
+  //modifying data in blockkchain, so now we have to pay, used send() method
+  it('Can change the message', async () => {
+    await inbox.methods
+      .setMessage('It is working!!')
+      .send({ from: accounts[0] });
+
+    // Now testing here!!
+    const message = await inbox.methods.message().call();
+    assert.equal(message, 'It is working!!');
   });
 });
